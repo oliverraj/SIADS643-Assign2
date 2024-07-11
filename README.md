@@ -17,3 +17,10 @@
 12. Suspect/interacting Drug List
 13. Concomitant/Not Administered Drug List
 14. ICSR Form
+### 2. eu_output.csv
+Many of the columns in the raw csv file were renamed and dropped. In addition, some of the columns were renamed. Ultimately, these columns were retained in the csv file for final analysis:
+1. EU_ID - EU local number renamed
+2. Age_group - Patient Age Group renamed
+3. Sex - Patient Sex renamed
+4. Symptoms_list - List of symptoms taken from reaction list
+5. VAX_MANU - Vaccine manufacturer
