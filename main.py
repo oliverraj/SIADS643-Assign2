@@ -1,11 +1,14 @@
-#Importing all the librries
+#Importing all the libraries
 import pandas as pd
 import glob
 import matplotlib.pyplot as plt 
 import seaborn as sns
 import os
 import re
-#"Merging all the US data files"
+import graphs as gp
+
+
+#"Merging all the EU data files"
 def clean(data_EU_pfizer):
     def extract_symptoms(symptom_list):
 
@@ -17,18 +20,19 @@ def clean(data_EU_pfizer):
             return symptoms
         else:
             return []
-            
+    # Renaming the columns  
     data_EU_pfizer.columns = ["EU_ID", "1", "2", "3", "4", "5", "AGE_GROUP", "6", "7", "SEX", "SYMPTOMS_LIST", "8", "9", "10"]
+    # Selection of specific columns
     data_EU_pfizer = data_EU_pfizer[["EU_ID", "AGE_GROUP", "SEX", "SYMPTOMS_LIST"]]
-        # data_EU_pfizer.head(2)
+    # Applying the function to the symptom list column to extract the specific symptoms
     data_EU_pfizer["SYMPTOMS_LIST"] = data_EU_pfizer["SYMPTOMS_LIST"].apply(extract_symptoms)
-        # data_EU_pfizer
+    # Renaming the age group column
     data_EU_pfizer["AGE_GROUP"] = data_EU_pfizer["AGE_GROUP"].astype(str).str.replace("Years", "").str.strip()
-        # data_EU_pfizer
+     # Renaming the age group column
     data_EU_pfizer["SEX"] = data_EU_pfizer["SEX"].astype(str).str.replace("emale", "").str.strip()
     data_EU_pfizer["SEX"] = data_EU_pfizer["SEX"].astype(str).str.replace("ale", "").str.strip()
     data_EU_pfizer["SEX"] = data_EU_pfizer["SEX"].astype(str).str.replace("Not Specified", "U").str.strip()
-    # data_EU_pfizer
+     # Renaming the VAX_MANU column to Pfizer
     data_EU_pfizer['VAX_MANU'] = "PFIZER"
     return data_EU_pfizer
 if __name__ == '__main__':
@@ -38,4 +42,11 @@ if __name__ == '__main__':
         data_EU_pfizer = pd.concat([data_EU_pfizer, x], axis = 0, ignore_index = True)      
     data = clean(data_EU_pfizer)
     data.to_csv("output_files/eu_output.csv")
-  
+
+  # Creating a bar plot of the number of symptoms by Pfizer vaccine in EU
+
+eu_output = pd.read_csv("/Users/adi/Desktop/MS1/git/output_files/eu_output.csv")
+plt = gp.symptom_by_vax_manu(eu_output)
+
+# Save the plot
+plt.savefig('/Users/adi/Desktop/MS1/git/output_files/symptoms_by_pfizer_barplot.png')
